@@ -1,4 +1,5 @@
 import { styled } from "styled-components"
+import PlayerType from "../types/Player"
 
 const Content = styled.div`
     box-sizing: border-box;
@@ -24,7 +25,7 @@ const PlayerImg = styled.img`
     object-fit: cover;
 `
 const Card = styled.div`
-    min-width: 350px;
+    width: 350px;
     height: 220px;
     border-radius: 12px;
     overflow: hidden;
@@ -39,7 +40,7 @@ const Card = styled.div`
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     }
   `
-  export default function StyledCard({player}){
+  export default function StyledCard({player}:{player:PlayerType}){
       return(
         <Card>
             <Content>    

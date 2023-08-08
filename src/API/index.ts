@@ -24,7 +24,7 @@ const validatedURL = (api_param: string, id_param: number|string) => {
   -For "POST"/sending a player to the API endpoint call sendRequest(API,"",options) options should be modified to 
 
 */
- const sendRequest = async (api: string, id = "", options = {}) => {
+ const sendRequest = async (api: string, id:string|number = "", options = {}) => {
     try {
       const req = await fetch(validatedURL(api, id), options);
       const resp = await req.json();
@@ -32,6 +32,19 @@ const validatedURL = (api_param: string, id_param: number|string) => {
     } catch (err) {
       console.error(err);
       throw new Error("Failed to fetch data");
+    }
+  };
+
+ export const deleteRequest = async (id: string|number) => {
+  
+    try {
+      await sendRequest(PLAYERURL, id, { method: "DELETE" });
+
+    } catch (err) {
+      console.error(
+        `Whoops, trouble removing player #${id} from the roster!`,
+        err
+      );
     }
   };
 

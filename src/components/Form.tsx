@@ -6,6 +6,7 @@ import { Container, Grid, Box, Typography, MenuItem, SelectChangeEvent, Divider}
 import LoadingButton from '@mui/lab/LoadingButton';
 import UploadIcon from '@mui/icons-material/Upload';
 import FormInput from './FormInput';
+import { UppyOptions } from '@uppy/core';
 
 import Uppy, { UppyFile } from "@uppy/core";
 import { Dashboard } from "@uppy/react";
@@ -18,7 +19,7 @@ import '@uppy/image-editor/dist/style.min.css'
 import '@uppy/status-bar/dist/style.min.css';
 import { addNewPlayer } from '../API';
 
-const uppy = new Uppy()
+const uppy = new Uppy({proudlyDisplayPoweredByUppy:false} as UppyOptions)
                 .use(ImageEditor, {})
                 .use(Compressor);
 
@@ -320,7 +321,11 @@ const PlayerForm: FC = () => {
                 </Grid>
                 <Grid item xs={12} sm={6} sx={{}}>
                   
-                <Dashboard uppy={uppy} id="Dashboard" plugins={['ImageEditor'] }/>
+                <Dashboard 
+                  uppy={uppy} 
+                  id="Dashboard" 
+                  plugins={['ImageEditor'] 
+                  }/>
                 </Grid>    
               </Grid>
             </FormProvider>

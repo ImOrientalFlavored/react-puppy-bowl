@@ -1,5 +1,6 @@
 import { styled } from "styled-components"
 import PlayerType from "../types/Player"
+import { useNavigate } from "react-router-dom"
 
 const Content = styled.div`
     box-sizing: border-box;
@@ -25,7 +26,7 @@ const PlayerImg = styled.img`
     object-fit: cover;
 `
 const Card = styled.div`
-    width: 350px;
+    width: 325px;
     height: 220px;
     border-radius: 12px;
     overflow: hidden;
@@ -40,9 +41,11 @@ const Card = styled.div`
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
     }
   `
-  export default function StyledCard({player}:{player:PlayerType}){
+
+export default function StyledCard({player}:{player:PlayerType}){
+      const navigate = useNavigate();
       return(
-        <Card>
+        <Card onClick={()=> navigate(`/players/${player.id}`)}>
             <Content>    
                 <PlayerName>{player.name}</PlayerName>
                 <PlayerBreed>{player.breed}</PlayerBreed>

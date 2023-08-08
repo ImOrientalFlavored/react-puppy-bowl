@@ -24,7 +24,6 @@ interface Player{
 
 export default function AllPlayers(){
     const [players, setPlayers] = useState([]);
-
       useEffect(()=>{
         async function fetchRoster(){
           const req = await sendRequest(PLAYERURL);
@@ -32,7 +31,6 @@ export default function AllPlayers(){
         }
         fetchRoster();          
       },[])
-      
     //Render all of the players in the roster using the map method
     return( 
       <>

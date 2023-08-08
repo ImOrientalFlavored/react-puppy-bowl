@@ -1,8 +1,9 @@
-import * as React from 'react';
-
-import AllPlayers from './AllPlayers';
+import { useState, createContext, useEffect } from 'react';
+//routes, layouts
+//import PlayerCarousel from '../components/layout/PlayerCarousel';
 import Banner from '../components/layout/Banner';
 import Form from '../components/Form';
+import sendRequest, {PLAYERURL} from '../API';
 
 
 import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
@@ -26,6 +27,14 @@ import { Container } from '@mui/material';
 //Icons
 import MenuIcon from '@mui/icons-material/Menu';
 import AddIcon from '@mui/icons-material/Add';
+import FlagIcon from '@mui/icons-material/Flag';
+import EmojiEventsIcon from '@mui/icons-material/EmojiEvents';
+import StadiumIcon from '@mui/icons-material/Stadium';
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+//import PlayerGrid from '../components/layout/PlayerGrid';
+import PlayerContainer from '../components/layout/PlayerContainer';
+import PlayerType from '../types/Player';
+//
 
 const drawerWidth = 240;
 
@@ -98,9 +107,21 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
+const defaultPlayerArray = [] as unknown as PlayerType[];
+export const PlayerContext = createContext(defaultPlayerArray);
 export default function Home() {
+    const [fetchedPlayers, setFetchedPlayers] = useState(defaultPlayerArray)
+    useEffect(()=>{
+      async function fetchRoster(){
+        const req = await sendRequest(PLAYERURL);
+        setFetchedPlayers(req.data.players)
+      }
+      fetchRoster();          
+    },[])
+
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -109,79 +130,103 @@ export default function Home() {
   const handleDrawerClose = () => {
     setOpen(false);
   };
-
+  console.log('home');
+  console.log(fetchedPlayers);
+  console.log('/home');
   return (
-    <Box sx={{ display: 'flex' }}>
-      <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(open && { display: 'none' }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Puppy Bowl GPX
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
-        <DrawerHeader>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
-          </IconButton>
-        </DrawerHeader>
-        <Divider />
-        <List>
-          {['Add Contestant', 'Get set!!', 'Contenders', 'Finish Line'].map((text, index) => (
-            <ListItem key={text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
+    
+    <PlayerContext.Provider value={fetchedPlayers}>
+    <Container maxWidth={'xl'}>
+      <Box sx={{ 
+        display: 'flex',
+        bgcolor: '#f0f0f0'
+      }}>
+        <CssBaseline />
+        <AppBar position="fixed" open={open} sx={{
+          bgcolor:"#ff8a36",
+        }}>
+            <Toolbar>
+              <IconButton
+                color="inherit"
+                aria-label="open drawer"
+                onClick={handleDrawerOpen}
+                edge="start"
                 sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
+                  marginRight: 5,
+                  ...(open && { display: 'none' }),
                 }}
               >
-                <ListItemIcon
+                <MenuIcon />
+              </IconButton>
+              <FlagIcon sx={{ 
+                transform:"scaleX(-1)",
+                }} />
+              <Typography variant="h6" zIndex={"10"} noWrap component="div" sx={{ 
+                textShadow:"0 0 1em #414141"}}>
+                Puppy Bowl GPX
+              </Typography>
+              <FlagIcon sx={{ 
+                boxShadow:`
+                1em 0 1em 4em #3434340b,
+                0 0 .5em .5em #4141412e,
+                inset 0 0 .5em .5em #695e4e40
+                `}}/>
+            </Toolbar>
+        </AppBar>
+        <Drawer variant="permanent" open={open}>
+          <DrawerHeader>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            </IconButton>
+          </DrawerHeader>
+          <Divider />
+          <List>
+            {['Add Contestant', 'Get set!!', 'Contenders', 'Finish Line', 'Calendar'].map((text, index) => (
+              <ListItem key={text} disablePadding sx={{ display: 'block' }}>
+                <ListItemButton
                   sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
+                    minHeight: 48,
+                    justifyContent: open ? 'initial' : 'center',
+                    px: 2.5,
                   }}
                 >
-                  {index === 0 ? <AddIcon /> : ''}
-                  {index === 1 ? <AddIcon /> : ''}
-                  {index === 2 ? <AddIcon /> : ''}
-                  {index === 3 ? <AddIcon /> : ''}
-                </ListItemIcon>
-                <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-      </Drawer>
-      <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
-    
-        <Container>
-          {/* Banner */}
-          <Banner />
-          {/* Intro/Content */}
-          {/* Title */}
-          {/* Carousel/Players */}
-          <AllPlayers />
-          {/* Detail/Player */}
-          {/* Form */}
-          <Form />
-          </Container>
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: open ? 3 : 'auto',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    {index === 0 ? <AddIcon /> : ''}
+                    {index === 1 ? <FlagIcon /> : ''}
+                    {index === 2 ? <StadiumIcon /> : ''}
+                    {index === 3 ? <EmojiEventsIcon /> : ''}
+                    {index === 4 ? <CalendarMonthIcon /> : ''}
+                  </ListItemIcon>
+                  <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </List>
+          <Divider />
+        </Drawer>
+        <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <DrawerHeader />
+          <Box>
+            {/* Banner */}
+            <Banner />
+            {/* Intro/Content */}
+            {/* Title */}
+            {/* Carousel/Players */}
+            <PlayerContainer />
+            {/*<PlayerCarousel />*/}
+            {/* Detail/Player */}
+            {/* Form */}
+            <Form />
+          </Box>
+        </Box>
       </Box>
-    </Box>
+    </Container>
+    </PlayerContext.Provider>
   );
 }

@@ -30,9 +30,13 @@ a:hover {
 body {
   margin: 0;
   display: flex;
-  place-items: center;
+  justify-content: center;
   min-width: 320px;
   min-height: 100vh;
+  background:
+        repeating-conic-gradient(
+          rgba(87, 87, 87, 0.798) 0% 25%, rgba(223, 204, 188, 0.798) 0% 50%) 
+        50% / 45px 45px;
 }
 
 h1 {
